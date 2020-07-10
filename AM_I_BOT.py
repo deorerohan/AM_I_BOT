@@ -6,7 +6,7 @@ If there is no data then you can request user to get validated
 
 import logging
 import json
-from Model import (AddUser, CheckUser)
+from Model import (AddUser, CheckUser, AddQuery)
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
@@ -43,10 +43,15 @@ def help(update, context):
 def check(update, context):
     """Check if requested user is in database and set his status of he is bot or not"""
     message = update.message.text
+    status = AddQuery(update.effective_user.username, message)
+    if not status:
+        return False
+
     message = message.replace('/check', '')
     messages = message.split()
     if messages != 1:
         update.message.reply_text('Please use bot wisely.')
+        return False
 
     username = messages[0].strip()
     if username:
@@ -65,9 +70,14 @@ def check(update, context):
 def echo(update, context):
     """Echo the user message."""
     message = update.message.text
+    status = AddQuery(update.effective_user.username, message)
+    if not status:
+        return
+
     messages = message.split()
     if len(messages) != 1:
         update.message.reply_text('Please use bot wisely.')
+        return False
 
     username = messages[0].strip()
     if username:
@@ -136,7 +146,7 @@ def ReadSecrets():
         botName = str(obj['BOT_NAME'])
         return token
 
-_DEBUG = True
+_DEBUG = False
 
 if __name__ == '__main__':
     token = ReadSecrets()

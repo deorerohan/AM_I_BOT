@@ -3,7 +3,8 @@ from sqlalchemy import (Column, ForeignKey,
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
 from sqlalchemy import create_engine
- 
+import datetime
+
 Base = declarative_base()
 
 # Create an engine that stores data in the local directory's
@@ -43,6 +44,20 @@ def CheckUser(username):
         return False, False
     else:
         return True, exists.is_bot
+
+def AddQuery(username, query):
+    exists = session.query(User).filter_by(user_name=username).one_or_none()
+    if(exists is None):
+        return False
+    
+    number = session.query(Query).filter_by(user_id=exists.id).count()
+    if number > 100:
+        return False
+
+    new_query = Query(query = query, query_time=datetime.datetime.now(), user_id=exists.id)
+    session.add(new_query)
+    session.commit()
+    return True
 
 if __name__ == "__main__":
     # Create all tables in the engine. This is equivalent to "Create Table"
