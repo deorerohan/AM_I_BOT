@@ -33,7 +33,27 @@ def start(update, context):
 
         update.message.reply_text(msg)
     else:
-        update.message.reply_text('Do not query multiple times')
+        status = AddQuery(update.effective_user.username, update.message.text)
+        if status:
+            update.message.reply_text('Do not query multiple times')
+
+def checkin(update, context):
+    """Send a message when the command /checkin is issued."""
+    isBot = update.effective_user.is_bot
+    status = AddUser(update.effective_user.username, isBot)
+    if status:
+        msg = f'Hi {update.effective_user.username}'
+        msg += '\n'
+        if isBot:
+            msg += 'Welcome to group'
+        else:
+            msg += 'Bots are not allowed to group'
+
+        update.message.reply_text(msg)
+    else:
+        status = AddQuery(update.effective_user.username, update.message.text)
+        if status:
+            update.message.reply_text('Do not query multiple times')
 
 def help(update, context):
     """Send a message when the command /help is issued."""
@@ -111,6 +131,7 @@ def main(token):
     # on different commands - answer in Telegram
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CommandHandler("check", check))
+    dp.add_handler(CommandHandler("checkin", checkin))
     dp.add_handler(CommandHandler("help", help))
 
     # on noncommand i.e message - echo the message on Telegram
