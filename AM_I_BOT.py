@@ -49,7 +49,7 @@ def check(update, context):
 
     message = message.replace('/check', '')
     messages = message.split()
-    if messages != 1:
+    if len(messages) != 1:
         update.message.reply_text('Please use bot wisely.')
         return False
 
@@ -58,9 +58,9 @@ def check(update, context):
         status, isBot = CheckUser(username)
         if status:
             if isBot:
-                msg = f'{username} is not a bot'
-            else:
                 msg = f'{username} is a bot'
+            else:
+                msg = f'{username} is not a bot'
         else:
             msg = f'{username} never contacted {botName}'
     else:
