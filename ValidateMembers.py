@@ -4,6 +4,9 @@ those can be found and then removed from group"""
 
 import csv
 from Model import CheckUserInGroup
+from ScrapGroupMembers import CreateClient
+
+client = CreateClient()
 
 with open("members.csv", encoding='UTF-8') as f:
     csv_reader = csv.reader(f)
@@ -19,3 +22,4 @@ with open("members.csv", encoding='UTF-8') as f:
         else:
             # user not present
             print(f'User ID : {userID} | Name : {user[3]} in Group {user[4]} did not checkin')
+            # client.send_message(userID, f'Please checkin in group {user[4]} else you will be kicked out in few days.')
