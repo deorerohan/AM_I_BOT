@@ -6,6 +6,7 @@ If there is no data then you can request user to get validated
 
 import logging
 import json
+import time
 from Model import (AddUser, CheckUser, AddQuery)
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
@@ -51,7 +52,9 @@ def checkin(update, context):
         else:
             msg += 'Bots are not allowed to group'
 
-        update.message.reply_text(msg)
+        message = update.message.reply_text(msg+'\nmessage will be deleted in 5 seconds')
+        time.sleep(5)
+        message.delete()
     else:
         status = AddQuery(update.effective_user.id, update.effective_chat.id, update.message.text)
         if status:
