@@ -83,6 +83,13 @@ def CheckUser(firstname, chatID):
     else:
         return True, exists.is_bot
 
+def CheckUserInGroup(userID, groupID):
+    exists = session.query(User).filter_by(user_id=userID, group_id=groupID).one_or_none()
+    if(exists is None):
+        return False, False
+    else:
+        return True, exists.is_bot
+
 def AddQuery(id, chatId, query):
     if id == chatId:
         chatId = None

@@ -79,5 +79,5 @@ with open("members.csv","w",encoding='UTF-8') as f:
         else:
             last_name= ""
         name= (first_name + ' ' + last_name).strip()
-        writer.writerow([username,user.id,user.access_hash,name,target_group.title, target_group.id])      
+        writer.writerow([username,user.id,user.access_hash,name,target_group.title, target_group.id])
 print('Members scraped successfully.')
