@@ -25,7 +25,7 @@ def start(update, context):
     status = AddUser(update.effective_user, update.effective_chat)
 
     if status:
-        msg = f'Hi {update.effective_user.username}'
+        msg = f'Hi {update.effective_user.first_name}'
         msg += '\n'
         if isBot:
             msg += 'You are a bot'
@@ -59,7 +59,7 @@ def checkin(update, context):
 
 def help(update, context):
     """Send a message when the command /help is issued."""
-    msg = '/check <username>'
+    msg = '/check <first name>'
     update.message.reply_text(msg)
 
 def check(update, context):
@@ -77,7 +77,12 @@ def check(update, context):
 
     firstname = messages[0].strip()
     if firstname:
-        status, isBot = CheckUser(firstname)
+        if  update.effective_chat.id == update.effective_user.id:
+            chatID = None
+        else:
+            chatID = update.effective_chat.id
+
+        status, isBot = CheckUser(firstname, chatID)
         if status:
             if isBot:
                 msg = f'{firstname} is a bot'
@@ -103,7 +108,12 @@ def echo(update, context):
 
     firstname = messages[0].strip()
     if firstname:
-        status, isBot = CheckUser(firstname)
+        if  update.effective_chat.id == update.effective_user.id:
+            chatID = None
+        else:
+            chatID = update.effective_chat.id
+
+        status, isBot = CheckUser(firstname, chatID)
         if status:
             if isBot:
                 msg = f'{firstname} is a bot'
@@ -112,7 +122,7 @@ def echo(update, context):
         else:
             msg = f'{firstname} never contacted {botName}'
     else:
-        msg = '/check <firstname>'
+        msg = '/check <first name>'
     update.message.reply_text(msg)
 
 def error(update, context):

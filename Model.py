@@ -76,8 +76,8 @@ def AddUser(effective_user, effective_chat):
     session.commit()
     return True
 
-def CheckUser(firstname):
-    exists = session.query(User).filter_by(first_name=firstname).one_or_none()
+def CheckUser(firstname, chatID):
+    exists = session.query(User).filter_by(first_name=firstname, group_id=chatID).one_or_none()
     if(exists is None):
         return False, False
     else:
