@@ -22,11 +22,8 @@ botName = ''
 def start(update, context):
     """Send a message when the command /start is issued."""
     isBot = update.effective_user.is_bot
-    status = AddUser(update.effective_user.id, 
-        update.effective_user.username, 
-        update.effective_user.first_name, 
-        update.effective_user.last_name, 
-        isBot)
+    status = AddUser(update.effective_user, update.effective_chat)
+
     if status:
         msg = f'Hi {update.effective_user.username}'
         msg += '\n'
@@ -37,30 +34,26 @@ def start(update, context):
 
         update.message.reply_text(msg)
     else:
-        status = AddQuery(update.effective_user.id, update.message.text)
+        status = AddQuery(update.effective_user.id, update.effective_chat.id, update.message.text)
         if status:
             update.message.reply_text('Do not query multiple times')
 
 def checkin(update, context):
     """Send a message when the command /checkin is issued."""
     isBot = update.effective_user.is_bot
-    status = AddUser(
-        update.effective_user.id,
-        update.effective_user.username, 
-        update.effective_user.first_name, 
-        update.effective_user.last_name, 
-        isBot)
+    status = AddUser(update.effective_user, update.effective_chat)
+
     if status:
-        msg = f'Hi {update.effective_user.username}'
+        msg = f'Hi {update.effective_user.first_name}'
         msg += '\n'
-        if isBot:
+        if not isBot:
             msg += 'Welcome to group'
         else:
             msg += 'Bots are not allowed to group'
 
         update.message.reply_text(msg)
     else:
-        status = AddQuery(update.effective_user.id, update.message.text)
+        status = AddQuery(update.effective_user.id, update.effective_chat.id, update.message.text)
         if status:
             update.message.reply_text('Do not query multiple times')
 
@@ -72,7 +65,7 @@ def help(update, context):
 def check(update, context):
     """Check if requested user is in database and set his status of he is bot or not"""
     message = update.message.text
-    status = AddQuery(update.effective_user.id, message)
+    status = AddQuery(update.effective_user.id, update.effective_chat.id, message)
     if not status:
         return False
 
@@ -99,7 +92,7 @@ def check(update, context):
 def echo(update, context):
     """Echo the user message."""
     message = update.message.text
-    status = AddQuery(update.effective_user.id, message)
+    status = AddQuery(update.effective_user.id, update.effective_chat.id, message)
     if not status:
         return
 
