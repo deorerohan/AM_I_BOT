@@ -22,7 +22,11 @@ botName = ''
 def start(update, context):
     """Send a message when the command /start is issued."""
     isBot = update.effective_user.is_bot
-    status = AddUser(update.effective_user.username, isBot)
+    status = AddUser(update.effective_user.id, 
+        update.effective_user.username, 
+        update.effective_user.first_name, 
+        update.effective_user.last_name, 
+        isBot)
     if status:
         msg = f'Hi {update.effective_user.username}'
         msg += '\n'
@@ -33,14 +37,19 @@ def start(update, context):
 
         update.message.reply_text(msg)
     else:
-        status = AddQuery(update.effective_user.username, update.message.text)
+        status = AddQuery(update.effective_user.id, update.message.text)
         if status:
             update.message.reply_text('Do not query multiple times')
 
 def checkin(update, context):
     """Send a message when the command /checkin is issued."""
     isBot = update.effective_user.is_bot
-    status = AddUser(update.effective_user.username, isBot)
+    status = AddUser(
+        update.effective_user.id,
+        update.effective_user.username, 
+        update.effective_user.first_name, 
+        update.effective_user.last_name, 
+        isBot)
     if status:
         msg = f'Hi {update.effective_user.username}'
         msg += '\n'
@@ -51,7 +60,7 @@ def checkin(update, context):
 
         update.message.reply_text(msg)
     else:
-        status = AddQuery(update.effective_user.username, update.message.text)
+        status = AddQuery(update.effective_user.id, update.message.text)
         if status:
             update.message.reply_text('Do not query multiple times')
 
@@ -63,7 +72,7 @@ def help(update, context):
 def check(update, context):
     """Check if requested user is in database and set his status of he is bot or not"""
     message = update.message.text
-    status = AddQuery(update.effective_user.username, message)
+    status = AddQuery(update.effective_user.id, message)
     if not status:
         return False
 
@@ -73,24 +82,24 @@ def check(update, context):
         update.message.reply_text('Please use bot wisely.')
         return False
 
-    username = messages[0].strip()
-    if username:
-        status, isBot = CheckUser(username)
+    firstname = messages[0].strip()
+    if firstname:
+        status, isBot = CheckUser(firstname)
         if status:
             if isBot:
-                msg = f'{username} is a bot'
+                msg = f'{firstname} is a bot'
             else:
-                msg = f'{username} is not a bot'
+                msg = f'{firstname} is not a bot'
         else:
-            msg = f'{username} never contacted {botName}'
+            msg = f'{firstname} never contacted {botName}'
     else:
-        msg = '/check <username>'
+        msg = '/check <firstname>'
     update.message.reply_text(msg)
 
 def echo(update, context):
     """Echo the user message."""
     message = update.message.text
-    status = AddQuery(update.effective_user.username, message)
+    status = AddQuery(update.effective_user.id, message)
     if not status:
         return
 
@@ -99,18 +108,18 @@ def echo(update, context):
         update.message.reply_text('Please use bot wisely.')
         return False
 
-    username = messages[0].strip()
-    if username:
-        status, isBot = CheckUser(username)
+    firstname = messages[0].strip()
+    if firstname:
+        status, isBot = CheckUser(firstname)
         if status:
             if isBot:
-                msg = f'{username} is a bot'
+                msg = f'{firstname} is a bot'
             else:
-                msg = f'{username} is not a bot'
+                msg = f'{firstname} is not a bot'
         else:
-            msg = f'{username} never contacted {botName}'
+            msg = f'{firstname} never contacted {botName}'
     else:
-        msg = '/check <username>'
+        msg = '/check <firstname>'
     update.message.reply_text(msg)
 
 def error(update, context):

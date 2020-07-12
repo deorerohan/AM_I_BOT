@@ -1,3 +1,8 @@
+"""
+Refering from following article
+https://python.gotrained.com/scraping-telegram-group-members-python-telethon/
+"""
+
 from telethon.sync import TelegramClient
 from telethon.tl.functions.messages import GetDialogsRequest
 from telethon.tl.types import InputPeerEmpty

@@ -16,7 +16,9 @@ session = DBSession()
 class User(Base):
     __tablename__ = 'User'
     id = Column(Integer, primary_key=True)
-    user_name = Column(String(250), unique=True, nullable=False)
+    user_name = Column(String(250))
+    first_name = Column(String(250))
+    last_name = Column(String(250))
     is_bot = Column(Boolean, nullable=False)
  
 class Query(Base):
@@ -27,26 +29,26 @@ class Query(Base):
     user_id = Column(Integer, ForeignKey('User.id'))
     person = relationship(User)
 
-def AddUser(username, isbot):
+def AddUser(id, username, firstname, lastname, isbot):
     """Add user if not exists"""
-    exists = session.query(User).filter_by(user_name=username).one_or_none()
+    exists = session.query(User).filter_by(id=id).one_or_none()
     if(exists is not None):
         return False
 
-    new_user = User(user_name = username, is_bot = isbot)
+    new_user = User(id=id, user_name = username, first_name=firstname, last_name=lastname, is_bot = isbot)
     session.add(new_user)
     session.commit()
     return True
 
-def CheckUser(username):
-    exists = session.query(User).filter_by(user_name=username).one_or_none()
+def CheckUser(firstname):
+    exists = session.query(User).filter_by(first_name=firstname).one_or_none()
     if(exists is None):
         return False, False
     else:
         return True, exists.is_bot
 
-def AddQuery(username, query):
-    exists = session.query(User).filter_by(user_name=username).one_or_none()
+def AddQuery(id, query):
+    exists = session.query(User).filter_by(id=id).one_or_none()
     if(exists is None):
         return False
     
