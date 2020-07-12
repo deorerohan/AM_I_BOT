@@ -131,3 +131,5 @@ dmypy.json
 # User list of ignore
 secrets.secret
 *.db
+*.session
+*.csv

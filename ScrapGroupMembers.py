@@ -2,17 +2,25 @@ from telethon.sync import TelegramClient
 from telethon.tl.functions.messages import GetDialogsRequest
 from telethon.tl.types import InputPeerEmpty
 import csv
+import json
 
-api_id = 123456
-api_hash = 'YOUR_API_HASH'
-phone = '+111111111111'
+# read file
+with open('secrets.secret', 'r') as secretsFile:
+    data = secretsFile.read()
+
+    # parse file
+    obj = json.loads(data)
+
+    api_id = obj['API_ID']
+    api_hash = str(obj['API_HASH'])
+    phone = str(obj['PHONE'])
+
 client = TelegramClient(phone, api_id, api_hash)
 
 client.connect()
 if not client.is_user_authorized():
     client.send_code_request(phone)
     client.sign_in(phone, input('Enter the code: '))
-
 
 chats = []
 last_date = None
