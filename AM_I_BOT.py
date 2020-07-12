@@ -7,6 +7,7 @@ If there is no data then you can request user to get validated
 import logging
 import json
 import time
+import threading
 from Model import (AddUser, CheckUser, AddQuery)
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
@@ -39,6 +40,10 @@ def start(update, context):
         if status:
             update.message.reply_text('Do not query multiple times')
 
+def self_destruct_message(message):
+    time.sleep(5)
+    message.delete()
+
 def checkin(update, context):
     """Send a message when the command /checkin is issued."""
     isBot = update.effective_user.is_bot
@@ -53,8 +58,9 @@ def checkin(update, context):
             msg += 'Bots are not allowed to group'
 
         message = update.message.reply_text(msg+'\nmessage will be deleted in 5 seconds')
-        time.sleep(5)
-        message.delete()
+        x = threading.Thread(target=self_destruct_message, args=(message,))
+        x.start()
+
     else:
         status = AddQuery(update.effective_user.id, update.effective_chat.id, update.message.text)
         if status:
